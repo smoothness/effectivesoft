@@ -8,7 +8,8 @@ import App from '@/App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    {/* Use Vite's base as the router basename so routes work under /effectivesoft/ on GitHub Pages */}
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <App />
     </BrowserRouter>
   </StrictMode>
