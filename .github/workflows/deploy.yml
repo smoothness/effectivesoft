@@ -42,6 +42,7 @@ jobs:
         run: npm run build
         env:
           VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
+          VITE_AUTH_ENDPOINT: ${{ secrets.VITE_AUTH_ENDPOINT }}
 
       - name: List build output
         run: ls -la dist/
