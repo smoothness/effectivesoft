@@ -1,4 +1,11 @@
-const AUTH_BASE_URL = import.meta.env.VITE_AUTH_ENDPOINT
+// const AUTH_BASE_URL = 'https://effectivesoftbe.vercel.app/'
+// const AUTH_BASE_URL = 'http://localhost:3000/'
+// const AUTH_BASE_URL = '/' // Use relative URL with Vite proxy
+
+// Environment-based configuration
+const AUTH_BASE_URL = import.meta.env.DEV
+  ? '/' // Use proxy in development
+  : 'https://effectivesoftbe.vercel.app/' // Use production URL in build
 
 type AuthPayload = {
   email?: string
@@ -9,13 +16,11 @@ type AuthPayload = {
 
 type AuthResponse = unknown
 
-async function login(payload: AuthPayload, token?: string): Promise<AuthResponse> {
+async function login(payload: AuthPayload): Promise<AuthResponse> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   }
-
-  if (token) headers.Authorization = token
 
   const res = await fetch(`${AUTH_BASE_URL}auth/login/`, {
     method: 'POST',
@@ -28,16 +33,31 @@ async function login(payload: AuthPayload, token?: string): Promise<AuthResponse
     throw new Error(`Login failed: ${res.status} ${errBody}`)
   }
 
-  return res.json()
+  const data = await res.json()
+  console.log('🚀 ~ login ~ data:', data)
+
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('auth_token', data?.access_token)
+      try {
+        // Notify the current window/tab that auth state changed
+        window.dispatchEvent(new Event('auth-change'))
+      } catch {
+        // ignore
+      }
+    }
+  } catch {
+    // ignore storage errors
+  }
+
+  return data
 }
 
-async function logout(payload: AuthPayload, token?: string): Promise<AuthResponse> {
+async function logout(payload: AuthPayload): Promise<AuthResponse> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   }
-
-  if (token) headers.Authorization = token
 
   const res = await fetch(`${AUTH_BASE_URL}auth/logout/`, {
     method: 'POST',
@@ -50,7 +70,17 @@ async function logout(payload: AuthPayload, token?: string): Promise<AuthRespons
     throw new Error(`Logout failed: ${res.status} ${errBody}`)
   }
 
-  return res.json()
+  const data = await res.json()
+
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('auth_token')
+    }
+  } catch {
+    // ignore
+  }
+
+  return data
 }
 
 export type { AuthPayload }
