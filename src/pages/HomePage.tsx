@@ -74,6 +74,12 @@ function HomePage() {
                 https://github.com/smoothness/effectivesoftbe
               </a>
             </p>
+            <p>
+              Link to backend "/" route:{' '}
+              <a className="!underline !text-blue-600" href="https://effectivesoftbe.vercel.app/">
+                https://effectivesoftbe.vercel.app/
+              </a>
+            </p>
           </div>
           <p className="mb-2 mt-3 text-xl">
             <strong>Features:</strong>
