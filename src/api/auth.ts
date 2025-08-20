@@ -4,7 +4,7 @@
 
 // Environment-based configuration
 const AUTH_BASE_URL = import.meta.env.DEV
-  ? '/' // Use proxy in development
+  ? '' // Use proxy in development (empty string to avoid double slash)
   : 'https://effectivesoftbe.vercel.app' // Use production URL in build
 
 type AuthPayload = {
@@ -22,7 +22,7 @@ async function login(payload: AuthPayload): Promise<AuthResponse> {
     Accept: 'application/json',
   }
 
-  const res = await fetch(`${AUTH_BASE_URL}auth/login`, {
+  const res = await fetch(`${AUTH_BASE_URL}/auth/login`, {
     method: 'POST',
     headers,
     body: JSON.stringify(payload),
@@ -59,7 +59,7 @@ async function logout(payload: AuthPayload): Promise<AuthResponse> {
     Accept: 'application/json',
   }
 
-  const res = await fetch(`${AUTH_BASE_URL}auth/logout`, {
+  const res = await fetch(`${AUTH_BASE_URL}/auth/logout`, {
     method: 'POST',
     headers,
     body: JSON.stringify(payload),
