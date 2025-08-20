@@ -1,7 +1,3 @@
-// const AUTH_BASE_URL = 'https://effectivesoftbe.vercel.app/'
-// const AUTH_BASE_URL = 'http://localhost:3000/'
-// const AUTH_BASE_URL = '/' // Use relative URL with Vite proxy
-
 // Environment-based configuration
 const AUTH_BASE_URL = import.meta.env.DEV
   ? '' // Use proxy in development (empty string to avoid double slash)
